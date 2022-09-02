@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>KCCTech Network Data Collection Web App</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        label {font-size: 13pt; text-align: center; display: block;}
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img id = "kcctech_logo" src = "logos/kcctech_logo.png" alt = "KCCTECH LOGO">
+    </div>
+    <section style = "padding-top: 20px;"class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section">Network Data Collector Web App</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                
+                <div class="col-md-7 col-lg-5">
+                    <div class="login-wrap p-4 p-md-5">
+                        <p style = "font-size: 12pt;"><b>Please select from one of the following options</b></p><br>
+                            <label for="networkDataCollector" id="networkDataCollector_label"><b>Network Data Collector</b></label>
+                            <a href = "/network" target = "_blank"><button type="button" id = "networkDataCollector" class="form-control btn btn-primary rounded submit px-3">Go now!</button></a>
+                            <br><br>
+                            <label for="singleDataCollection" id="singleDataCollection_label"><b>Single Data Collection</b></label>
+                            <a href = "/single" target = "_blank"><button type="button" id = "singleDataCollection" class="form-control btn btn-primary rounded submit px-3">Go now!</button></a>
+                            <br><br>
+                            <label for="onlineMapping" id="onlineMapping_label"><b>Online Mapping</b></label>
+                            <a href = "/online-mapping" target = "_blank"><button type="button" id = "onlineMapping" class="form-control btn btn-primary rounded submit px-3">Go now!</button></a>
+                            <br><br>
+                            <label for="offlineMapping" id="offlineMapping"><b>Offline Mapping</b></label>
+                            <a href = "/offline-mapping" target = "_blank"><button type="button" id = "offlineMapping" class="form-control btn btn-primary rounded submit px-3">Go now!</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="js/jquery.min.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>KCCTech - Offline Mapping</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/main.css">
+        <style>
+            form   {text-align: center; margin: auto; padding-right: 10px;}label {text-align: center; display: block;}#typeOfTest_label {padding-right: 36px; display: inline-block; }#typeOfTest {display: inline-block;margin:auto;}#submit_button {text-align: center; margin:auto; display: flex;}
+            #locationImg {margin-left: 70px;} #location_img_label {margin:left; padding-right: 0px;}#display_image{margin-right:auto; margin-left: auto;width: 700px;height:800px;border: 1px solid black;background-position: center;background-size: 700px 800px;background-repeat: no-repeat; }
+            #kpi_settings {margin-left: 70px;} #kpi_settings_label {margin:left; padding-right: 0px;}
+            #pointsFile {margin-left: 70px;} #points_file_label {margin:left; padding-right: 0px;}
+            #point1 {z-index: 0;background: white;position: fixed; top: 0; left: 0;width: 10px;height: 10px;border-radius: 50%;display: flex;} 
+            #point2 {z-index: 1;background: white;position: fixed; top: 0; left: 0;width: 10px;height: 10px;border-radius: 50%;display: flex;}
+            #isStatic_label {padding-right: 36px; display: inline-block; }
+            #isStatic {display: inline-block;margin:auto;}
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <img id = "kcctech_logo" src = "logos/kcctech_logo.png" alt = "KCCTECH LOGO">
+        </div>
+        <div class="container">
+            <br>
+            <div class="row justify-content-center">
+                <form action="" method="POST" style="width:100%">
+                    <div class = "input_div">
+                        <h2 class="heading-section">Post Processing</h2>
+                        <div id ="hidden"></div>
+                        <input type="hidden" id="whichCoordinate" name="whichCoordinate" value = 0 />
+                        <input type="hidden" id="currentPointIndex" name="currentPointIndex" value = 1 />
+                        <input type="hidden" id="display_orientation" name="display_orientation" value = "vertical" />
+                        <input type="hidden" id="display_size" name="display_size" value = "700px 800px" />
+                        <input type="hidden" id="offset_left" name="offset_left" value = 598 />
+                        <br>
+                        <label for="typeOfTest" id="typeOfTest_label">Type of Data</label>
+                        <select id="typeOfTest" name="typeOfTest" >
+                            <option value="KPI">KPI - CPE</option>
+                            <option value="TCP UL">TCP UL</option>
+                            <option value="TCP DL">TCP DL</option>
+                            <option value="UDP UL">UDP UL</option>
+                            <option value="UDP DL">UDP DL</option>
+                            <option value="Ping">Ping</option>
+                        </select>
+                        <br>
+                        <label for="isStatic" id="isStatic_label" ><b>Static Test?</b></label>
+                        <input type="checkbox" id="isStatic" name="isStatic">
+                        <label for="kpi_settings" id="kpi_settings_label"><b>KPI Settings File</b></label>
+                        <input type="file" id="kpi_settings" name="kpi_settings" accept= "text/csv" required/><br>
+                        <label for="pointsFile" id="points_file_label"><b>(Optional) Points File</b></label>
+                        <input type="file" id="pointsFile" name="pointsFile" accept="text/csv"/><br>
+                        <label for="locationImg" id="location_img_label"><b>Location Image</b></label>
+                        <input type="file" id="locationImg" name="locationImg" accept="image/png, image/jpg, image/jpeg" required/><br><br>
+                        <button onclick="addPoint()" type="button" id="add_point_button">Add Point</button>
+                        <button style ="margin-left: 10px;" onclick="removePoint()" type="button" id="remove_point_button">Remove Point</button>
+                        <br><br>
+                        <div id = "display_image"></div>
+                    </div>
+<script>
+    function addPoint() {
+        if(document.querySelector("#display_image").style.backgroundImage != ''){
+            let newPoint = document.createElement("div"); 
+            let currentPointNum = document.getElementById("currentPointIndex").value;
+            newPoint.setAttribute("id", "point" + currentPointNum); newPoint.setAttribute("style", "z-index: 1;background: white;position: absolute; top: 0; left: 0;width: 10px;height: 10px;border-radius: 50%;display: flex;");document.getElementById("display_image").appendChild(newPoint);
+            
+            let newX = document.createElement("input"); 
+            newX.setAttribute("id", "startX" + parseInt(currentPointNum)); 
+            newX.setAttribute("name", "startX" + parseInt(currentPointNum)); 
+            newX.setAttribute("type", "hidden");
+            
+            let newY = document.createElement("input"); 
+            newY.setAttribute("id", "startY" + parseInt(currentPointNum)); 
+            newY.setAttribute("name", "startY" + parseInt(currentPointNum)); 
+            newY.setAttribute("type", "hidden");
+
+            let inputBlock = document.getElementById("hidden"); inputBlock.appendChild(newX);inputBlock.appendChild(newY);
+            document.getElementById("currentPointIndex").value = parseInt(currentPointNum) + 1;
+        }
+        
+    }
+    function removePoint() {
+        let currentPointNum = document.getElementById("currentPointIndex").value;
+        if(parseInt(currentPointNum) > 1){ 
+            let parentNode = document.getElementById("display_image"); 
+            console.log(parentNode);
+            parentNode.removeChild(parentNode.lastElementChild);
+            document.getElementById("currentPointIndex").value = parseInt(currentPointNum) - 1;
+            let inputBlock = document.getElementById("hidden"); 
+            inputBlock.removeChild(inputBlock.lastElementChild);
+            inputBlock.removeChild(inputBlock.lastElementChild);
+        }
+    }
+    function printMousePos(event) {
+        if(document.getElementById("display_image").style.backgroundImage != ""){
+            let pointVal = document.getElementById("currentPointIndex").value;
+            let pntNum = parseInt(pointVal) - 1;
+            let x_id = "startX" + pntNum;
+            let y_id = "startY" + pntNum;
+            
+            //top left corner x = 50 + document.getElementById("display_image").style.marginleft
+            //top left corner y = 515
+            let picString = document.getElementById("display_size").value;
+            let pictureSize = picString.split(" ");//width, height
+            let offset_left = document.getElementById("display_image").offsetLeft;
+            for(let i = 0; i < 2; i++){
+                pictureSize[i] = parseInt(pictureSize[i].substring(0, pictureSize[i].length - 2));
+            }
+            console.log("offset", offset_left); 
+            console.log("pic width", pictureSize[0]);
+            console.log("pic height", pictureSize[1]);
+            console.log("x", event.layerX); 
+            console.log("y", event.layerY);
+            if((event.layerX > offset_left && event.layerX < (offset_left + pictureSize[0])) && (event.layerY > 515 && event.layerY < (515 + pictureSize[1]))){
+                let change = "point"+parseInt(pntNum); 
+                document.getElementById(change).style.marginLeft = (event.layerX - 3).toString() +"px";
+                document.getElementById(change).style.marginTop = (event.layerY - 4).toString() +"px";
+                if(document.getElementById(change).style.backgroundColor == 'white'){
+                    const randomColor = Math.floor(Math.random()*16777215).toString(16);
+                    console.log("color", randomColor);
+                    let circleColor =  "#" + randomColor; 
+                    document.getElementById(change).style.backgroundColor = circleColor;
+                }
+                document.getElementById(x_id).value = event.layerX;
+                document.getElementById(y_id).value = event.layerY;
+            }   
+        }
+    }
+document.addEventListener("click", printMousePos);//top left (92, 67) (792, 517)//(411,151) (868, 585)
+let inputImage = document.querySelector("#locationImg"); 
+let uploaded_image = ""; 
+inputImage.addEventListener("change", function(){
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+        uploaded_image = reader.result;
+        document.querySelector("#display_image").style.backgroundImage = `url(${uploaded_image})`;
+        var img = new Image();
+        img.onload = function() {
+            let newDisplay = '';
+            document.querySelector("#display_image").style.backgroundImage = `url(${uploaded_image})`;
+            if(this.height >= 1100 && this.width >= 1100){ //both
+                newDisplay = "1100px 1100px";
+                document.getElementById("display_image").style.height = "1100px";
+                document.getElementById("display_image").style.width = "1100px";
+            }
+            else if(this.height < 1100 && this.width >= 1100){//width is big
+                newDisplay = "1100px " + this.height.toString() + "px"; // width height
+                document.getElementById("display_image").style.height = this.height.toString() + "px";
+                document.getElementById("display_image").style.width = "1100px";
+            }
+            else{
+                newDisplay = this.width.toString() + "px " + this.height.toString() + "px"; // width height
+                document.getElementById("display_image").style.height = this.height.toString() + "px";
+                document.getElementById("display_image").style.width = this.width.toString() + "px";
+            }
+            document.getElementById("display_size").value = newDisplay;
+            document.getElementById("display_image").style.backgroundSize = newDisplay;
+            document.getElementById("offset_left").value = document.getElementById("display_image").offsetLeft;
+            //alert( this.width +" "+ this.height );
+        };
+        img.src = `${uploaded_image}`;
+    });
+    reader.readAsDataURL(this.files[0]);
+})
+</script>
+</div><br><button type="submit" id="submit_button">Start</button></form>
+</div></div><script src="js/jquery.min.js"></script>
+</body></html>

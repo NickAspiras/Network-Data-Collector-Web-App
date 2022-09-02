@@ -1,0 +1,5 @@
+Input,Menu,Command,Action Type,Description
+1,#1 [++when you stop a point Static Full Test],iperf3 -c 0.0.0.0 -R -t 60 -P 2&iperf3 -c 0.0.0.0 -t 60 -P 2&iperf3 -c 0.0.0.0 -b 250M -t 60 -R -u -l 1300&iperf3 -c 0.0.0.0 -b 250M -t 60 -u -l 1300&ping 0.0.0.0 -c 1000 -i 0.01,iPerf Multiple,Multiple Commands
+2,#2 [++By walking between points TCP Upload Long + CPE],iperf3 -c 0.0.0.0 -t 6000,TCP Upload,TCP  upload with 86400 time in seconds to transmit (24 hours duration)
+3,#3 [++Check if Working],ping 0.0.0.0 -c 1000 -i 0.01,Test to Check if Working,Check Working
+4,#4 [++Run Nothing],,Don't Run Test,No Test
